@@ -23,16 +23,11 @@ const {
             fs.writeFileSync('fbcookies.json', data, null);
         });
         await driver.manage().deleteAllCookies();
-
         await driver.navigate().refresh();
-
-        // await driver.manage().addCookie();
-
-        const ob = readCo();
+        const ob = readJsonFile();
         for (const o of ob) {
-            const {name, value} = o;
-            console.log(name, value);
-            await driver.manage().addCookie({name, value});
+            const { domain, expiry, httpOnly, name, path, secure, value } = o;
+            await driver.manage().addCookie({ domain, expiry, httpOnly, name, path, secure, value });
         }
         await driver.navigate().refresh();
     } catch (error) {
@@ -42,6 +37,6 @@ const {
     }
 })();
 
-function readCo() {
+function readJsonFile() {
     return JSON.parse(fs.readFileSync('fbcookies.json', 'utf8'));
 }
